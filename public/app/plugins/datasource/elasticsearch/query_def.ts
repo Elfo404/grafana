@@ -1,95 +1,104 @@
 import _ from 'lodash';
+import {
+  ElasticsearchBucketAggregation,
+  MetricAggregation,
+  MetricAggregationType,
+  MetricsConfiguration,
+} from './types';
 
-export const metricAggTypes = [
-  { text: 'Count', value: 'count', requiresField: false },
-  {
-    text: 'Average',
-    value: 'avg',
+export const metricAggregationConfig: MetricsConfiguration = {
+  count: {
+    label: 'Count',
+    requiresField: false,
+  },
+  avg: {
+    label: 'Average',
     requiresField: true,
     supportsInlineScript: true,
     supportsMissing: true,
   },
-  {
-    text: 'Sum',
-    value: 'sum',
+  sum: {
+    label: 'Sum',
     requiresField: true,
     supportsInlineScript: true,
     supportsMissing: true,
   },
-  {
-    text: 'Max',
-    value: 'max',
+  max: {
+    label: 'Max',
     requiresField: true,
     supportsInlineScript: true,
     supportsMissing: true,
   },
-  {
-    text: 'Min',
-    value: 'min',
+  min: {
+    label: 'Min',
     requiresField: true,
     supportsInlineScript: true,
     supportsMissing: true,
   },
-  {
-    text: 'Extended Stats',
-    value: 'extended_stats',
+  extended_stats: {
+    label: 'Extended Stats',
     requiresField: true,
     supportsMissing: true,
     supportsInlineScript: true,
   },
-  {
-    text: 'Percentiles',
-    value: 'percentiles',
+  percentiles: {
+    label: 'Percentiles',
     requiresField: true,
     supportsMissing: true,
     supportsInlineScript: true,
   },
-  {
-    text: 'Unique Count',
-    value: 'cardinality',
+  cardinality: {
+    label: 'Unique Count',
     requiresField: true,
     supportsMissing: true,
   },
-  {
-    text: 'Moving Average',
-    value: 'moving_avg',
+  moving_avg: {
+    label: 'Moving Average',
     requiresField: false,
     isPipelineAgg: true,
     minVersion: 2,
   },
-  {
-    text: 'Derivative',
-    value: 'derivative',
+  derivative: {
+    label: 'Derivative',
     requiresField: false,
     isPipelineAgg: true,
     minVersion: 2,
   },
-  {
-    text: 'Cumulative Sum',
-    value: 'cumulative_sum',
+  cumulative_sum: {
+    label: 'Cumulative Sum',
     requiresField: false,
     isPipelineAgg: true,
     minVersion: 2,
   },
-  {
-    text: 'Bucket Script',
-    value: 'bucket_script',
+  bucket_script: {
+    label: 'Bucket Script',
     requiresField: false,
     isPipelineAgg: true,
     supportsMultipleBucketPaths: true,
     minVersion: 2,
   },
-  { text: 'Raw Document (legacy)', value: 'raw_document', requiresField: false },
-  { text: 'Raw Data', value: 'raw_data', requiresField: false },
-  { text: 'Logs', value: 'logs', requiresField: false },
-];
+  raw_document: {
+    label: 'Raw Document (legacy)',
+    requiresField: false,
+    isSingleMetric: true,
+  },
+  raw_data: {
+    label: 'Raw Data',
+    requiresField: false,
+    isSingleMetric: true,
+  },
+  logs: {
+    label: 'Logs',
+    requiresField: false,
+  },
+};
 
 export const bucketAggTypes = [
-  { text: 'Terms', value: 'terms', requiresField: true },
-  { text: 'Filters', value: 'filters' },
-  { text: 'Geo Hash Grid', value: 'geohash_grid', requiresField: true },
-  { text: 'Date Histogram', value: 'date_histogram', requiresField: true },
-  { text: 'Histogram', value: 'histogram', requiresField: true },
+  { label: 'Terms', value: 'terms', requiresField: true },
+  { label: 'Filters', value: 'filters' },
+  { label: 'Geo Hash Grid', value: 'geohash_grid', requiresField: true },
+  { label: 'Date Histogram', value: 'date_histogram', requiresField: true },
+  { label: 'Histogram', value: 'histogram', requiresField: true },
 ];
 
 export const orderByOptions = [
@@ -172,7 +181,7 @@ export const movingAvgModelSettings: any = {
   ],
 };
 
-export function getMetricAggTypes(esVersion: any) {
+export function getMetricAggTypes(esVersion: number) {
   return _.filter(metricAggTypes, f => {
     if (f.minVersion) {
       return f.minVersion <= esVersion;
@@ -199,12 +208,9 @@ export function isPipelineAgg(metricType: any) {
   return false;
 }
 
-export function isPipelineAggWithMultipleBucketPaths(metricType: any) {
-  if (metricType) {
-    return metricAggTypes.find(t => t.value === metricType && t.supportsMultipleBucketPaths) !== undefined;
-  }
-
-  return false;
+export function isPipelineAggWithMultipleBucketPaths(metricType: MetricAggregationType) {
+  return !!metricAggregationConfig[metricType].supportsMultipleBucketPaths;
+  // return metricAggTypes.find(t => t.value === metricType && t.supportsMultipleBucketPaths) !== undefined;
 }
 
 export function getPipelineAggOptions(targets: any) {
@@ -268,12 +274,12 @@ export function describeOrderBy(orderBy: any, target: any) {
   }
 }
 
-export function defaultMetricAgg() {
-  return { type: 'count', id: '1' };
+export function defaultMetricAgg(id = 1): MetricAggregation {
+  return { type: 'count', id, hide: false };
 }
 
-export function defaultBucketAgg() {
-  return { type: 'date_histogram', id: '2', settings: { interval: 'auto' } };
+export function defaultBucketAgg(id = 1): ElasticsearchBucketAggregation {
+  return { type: 'date_histogram', id, settings: { interval: 'auto' }, hide: false };
 }
 
 export const findMetricById = (metrics: any[], id: any) => {

@@ -177,40 +177,40 @@ export class ElasticMetricAggCtrl {
       $scope.onChange();
     };
 
-    $scope.getFieldsInternal = () => {
-      if ($scope.agg.type === 'cardinality') {
-        return $scope.getFields();
-      }
-      return $scope.getFields({ $fieldType: 'number' });
-    };
+    // $scope.getFieldsInternal = () => {
+    //   if ($scope.agg.type === 'cardinality') {
+    //     return $scope.getFields();
+    //   }
+    //   return $scope.getFields({ $fieldType: 'number' });
+    // };
 
-    $scope.addMetricAgg = () => {
-      const addIndex = metricAggs.length;
+    // $scope.addMetricAgg = () => {
+    //   const addIndex = metricAggs.length;
 
-      const id = _.reduce(
-        $scope.target.bucketAggs.concat($scope.target.metrics),
-        (max, val) => {
-          return parseInt(val.id, 10) > max ? parseInt(val.id, 10) : max;
-        },
-        0
-      );
+    //   const id = _.reduce(
+    //     $scope.target.bucketAggs.concat($scope.target.metrics),
+    //     (max, val) => {
+    //       return parseInt(val.id, 10) > max ? parseInt(val.id, 10) : max;
+    //     },
+    //     0
+    //   );
 
-      metricAggs.splice(addIndex, 0, { type: 'count', field: 'select field', id: (id + 1).toString() });
-      $scope.onChange();
-    };
+    //   metricAggs.splice(addIndex, 0, { type: 'count', field: 'select field', id: id + 1, hide: false });
+    //   $scope.onChange();
+    // };
 
-    $scope.removeMetricAgg = () => {
-      metricAggs.splice($scope.index, 1);
-      $scope.onChange();
-    };
+    // $scope.removeMetricAgg = () => {
+    //   metricAggs.splice($scope.index, 1);
+    //   $scope.onChange();
+    // };
 
-    $scope.toggleShowMetric = () => {
-      $scope.agg.hide = !$scope.agg.hide;
-      if (!$scope.agg.hide) {
-        delete $scope.agg.hide;
-      }
-      $scope.onChange();
-    };
+    // $scope.toggleShowMetric = () => {
+    //   $scope.agg.hide = !$scope.agg.hide;
+    //   if (!$scope.agg.hide) {
+    //     delete $scope.agg.hide;
+    //   }
+    //   $scope.onChange();
+    // };
 
     $scope.init();
   }
