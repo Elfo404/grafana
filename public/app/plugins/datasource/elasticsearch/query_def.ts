@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import {
-  ElasticsearchBucketAggregation,
   MetricAggregation,
   MetricAggregationType,
   MetricsConfiguration,
+  BucketsConfiguration,
+  BucketAggregation,
 } from './types';
 
 export const metricAggregationConfig: MetricsConfiguration = {
@@ -93,13 +94,28 @@ export const metricAggregationConfig: MetricsConfiguration = {
   },
 };
 
-export const bucketAggTypes = [
-  { label: 'Terms', value: 'terms', requiresField: true },
-  { label: 'Filters', value: 'filters' },
-  { label: 'Geo Hash Grid', value: 'geohash_grid', requiresField: true },
-  { label: 'Date Histogram', value: 'date_histogram', requiresField: true },
-  { label: 'Histogram', value: 'histogram', requiresField: true },
-];
+export const bucketAggregationConfig: BucketsConfiguration = {
+  terms: {
+    label: 'Terms',
+    requiresField: true,
+  },
+  filters: {
+    label: 'Filters',
+    requiresField: false,
+  },
+  geohash_grid: {
+    label: 'Geo Hash Grid',
+    requiresField: true,
+  },
+  date_histogram: {
+    label: 'Date Histogram',
+    requiresField: true,
+  },
+  histogram: {
+    label: 'Histogram',
+    requiresField: true,
+  },
+};
 
 export const orderByOptions = [
   { text: 'Doc Count', value: '_count' },
@@ -278,8 +294,8 @@ export function defaultMetricAgg(id = 1): MetricAggregation {
   return { type: 'count', id, hide: false };
 }
 
-export function defaultBucketAgg(id = 1): ElasticsearchBucketAggregation {
-  return { type: 'date_histogram', id, settings: { interval: 'auto' }, hide: false };
+export function defaultBucketAgg(id = 1): BucketAggregation {
+  return { type: 'date_histogram', id, settings: { interval: 'auto' } };
 }
 
 export const findMetricById = (metrics: any[], id: any) => {
