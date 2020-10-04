@@ -34,7 +34,7 @@ export type MetricsConfiguration = Record<MetricAggregationType, MetricConfigura
 export type BucketsConfiguration = Record<BucketAggregationType, BucketConfiguration>;
 
 export interface ElasticsearchAggregation {
-  id: number;
+  id: string;
   type: MetricAggregationType | BucketAggregationType;
   settings?: unknown;
   field?: string;
