@@ -1,11 +1,6 @@
 import _ from 'lodash';
-import {
-  MetricAggregation,
-  MetricAggregationType,
-  MetricsConfiguration,
-  BucketsConfiguration,
-  BucketAggregation,
-} from './types';
+import { MetricAggregation, MetricAggregationType } from './state/metricAggregation/types';
+import { MetricsConfiguration, BucketsConfiguration, BucketAggregation } from './types';
 
 export const metricAggregationConfig: MetricsConfiguration = {
   count: {

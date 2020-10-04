@@ -1,4 +1,5 @@
 import { DataQuery, DataSourceJsonData } from '@grafana/data';
+import { MetricAggregation, MetricAggregationType } from './state/metricAggregation/types';
 
 export interface ElasticsearchOptions extends DataSourceJsonData {
   timeField: string;

@@ -1,7 +1,7 @@
 import { Action } from '../../hooks/useReducerCallback';
 
-export const ADD_METRIC = '@mtrics/add';
-export const REMOVE_METRIC = '@mtrics/remove';
+export const ADD_METRIC = '@metrics/add';
+export const REMOVE_METRIC = '@metrics/remove';
 
 export type MetricAggregationType =
   | 'count'
@@ -21,10 +21,11 @@ export type MetricAggregationType =
   | 'logs';
 
 export interface MetricAggregation {
-  id: string;
+  id: number;
   type: MetricAggregationType;
   hide: boolean;
   settings?: unknown;
+  field?: string;
 }
 
 // Action Types
@@ -32,13 +33,12 @@ export interface MetricAggregation {
 export interface AddMetricAction extends Action<typeof ADD_METRIC> {
   payload: {
     metricType: MetricAggregationType;
-    index: number;
   };
 }
 
 export interface RemoveMetricAction extends Action<typeof REMOVE_METRIC> {
   payload: {
-    id: string;
+    id: number;
   };
 }
 
